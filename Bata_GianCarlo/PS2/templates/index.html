@@ -9,46 +9,41 @@
 
 {% block content %}
 <div class="wrapper">
-    {% if flag %}
-    <h1>Thank you for responding!</h1>
-    <div class="go-back-link">
-        <a href="/">Go back</a>
-    </div>
-    {% else %}
-    <form method="POST">
+    <form action="greetings" method="POST">
         <h1>Form</h1>
         <div class="input-box">
             <label for="f_name">First Name:</label>
             <input class="form-control" type="text" id="f_name" name="f_name"
-                placeholder="Juan" required>
+                required>
         </div>
         <div class="input-box">
             <label for="m_name">Middle Name:</label>
             <input class="form-control" type="text" id="m_name" name="m_name"
-                placeholder="Santos" required>
+                required>
         </div>
         <div class="input-box">
             <label for="l_name">Last Name:</label>
             <input class="form-control" type="text" id="l_name" name="l_name"
-                placeholder="Dela Cruz" required>
+                required>
         </div>
         <div class="input-box">
-            <label for="birthday">Birthday:</label>
-            <input class="form-control" type="date" id="birthday"
-                name="birthday" required>
+            <label for="contact_no">Contact Number:</label>
+            <input class="form-control" type="number" id="contact_no"
+                name="contact_no" required>
         </div>
         <div class="input-box">
             <label for="email">Email:</label>
             <input class="form-control" type="email" id="email" name="email"
-                placeholder="abcd1234@gmail.com" required>
+                required>
         </div>
         <div class="input-box">
             <label for="address">Address:</label>
             <input class="form-control" type="text" id="address" name="address"
-                placeholder="Manila, Philippines" required>
+                required>
         </div>
-        <button class="btn" type="submit" value="Submit">Submit</button>
+        <div class="button">
+            <button class="btn" type="submit" value="Submit">Submit</button>
+        </div>
     </form>
-    {% endif %}
 </div>
 {% endblock %}

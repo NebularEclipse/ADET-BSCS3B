@@ -6,6 +6,7 @@ import os
 app = Flask(__name__)
 Bootstrap(app)
 
+
 def append_to_json(filepath, data):
     if not os.path.exists(filepath):
         with open(filepath, "w") as file:
@@ -17,16 +18,20 @@ def append_to_json(filepath, data):
         file.seek(0)
         json.dump(old_data, file, indent=4)
 
-@app.route("/", methods=["GET", "POST"])
+
+@app.route("/")
 def index():
+    return render_template("index.html")
+
+
+@app.route("/greetings", methods=["POST"])
+def greetings():
     dict = {}
-    flag = False
-    if request.method == "POST":
-        data = request.form.to_dict()
-        filepath = "data.json"
-        append_to_json(filepath, data)
-        flag = True
-    return render_template("index.html", flag=flag)
+    data = request.form.to_dict()
+    filepath = "data.json"
+    append_to_json(filepath, data)
+    return render_template("greetings.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
