@@ -9,17 +9,9 @@
             href="{{ url_for('static', filename='css/style.css') }}" />
     </head>
     <body>
-        {% if name %}
-        <div class="greetings">
-            <h1>Hello, {{ name }}!</h1>
-            <div class="go-back-link">
-                <a href="/">Go back</a>
-            </div>
-        </div>
-        {% else %}
         <div class="wrapper">
-            <h1>Hello</h1>
-            <form method="POST">
+            <h1>Hello World!</h1>
+            <form action="greetings" method="POST">
                 <div class="input-box">
                     <input
                         type="text"
@@ -32,6 +24,5 @@
                 <button type="submit" class="btn">Submit</button>
             </form>
         </div>
-        {% endif %}
     </body>
 </html>

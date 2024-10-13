@@ -2,12 +2,17 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
+
+@app.route("/")
 def index():
-    name = None
-    if request.method == "POST":
-        name = request.form.get("name")
-    return render_template("index.html", name=name)
+    return render_template("index.html")
+
+
+@app.route("/greetings", methods=["POST"])
+def greetings():
+    name = request.form.get("name")
+    return render_template("greetings.html", name=name)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
