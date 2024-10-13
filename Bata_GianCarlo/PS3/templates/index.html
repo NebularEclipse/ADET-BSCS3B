@@ -1,0 +1,49 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+    <form action="greetings" method="POST">
+        <h1>Form</h1>
+        <div class="input-box">
+            <label for="f_name">First Name:</label>
+            <input class="form-control" type="text" id="f_name" name="f_name"
+                required>
+        </div>
+        <div class="input-box">
+            <label for="m_name">Middle Name:</label>
+            <input class="form-control" type="text" id="m_name" name="m_name"
+                required>
+        </div>
+        <div class="input-box">
+            <label for="l_name">Last Name:</label>
+            <input class="form-control" type="text" id="l_name" name="l_name"
+                required>
+        </div>
+        <div class="input-box">
+            <label for="contact_no">Contact Number:</label>
+            <input class="form-control" type="number" id="contact_no"
+                name="contact_no" required>
+        </div>
+        <div class="input-box">
+            <label for="email">Email:</label>
+            <input class="form-control" type="email" id="email" name="email"
+                required>
+        </div>
+        <div class="input-box">
+            <label for="address">Address:</label>
+            <input class="form-control" type="text" id="address" name="address"
+                required>
+        </div>
+        <div class="button">
+            <button class="btn" type="submit" value="Submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

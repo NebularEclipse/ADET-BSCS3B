@@ -1,40 +1,46 @@
+import secrets
+from database import DBManager
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
-import mysql.connector
-import os
+
+secret_key = secrets.token_hex(16)
 
 app = Flask(__name__)
+app.secret_key = secret_key
 Bootstrap(app)
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root"
-)
+database = DBManager("localhost", "root", None, "adet")
 
-cursor = db.cursor()
-cursor.execute("CREATE DATABASE dbtest")
 
-# def append_to_db(filepath, data):
-#     if not os.path.exists(filepath):
-#         with open(filepath, "w") as file:
-#             json.dump([], file, indent=4)
-
-#     with open(filepath, "r+") as file:
-#         old_data = json.load(file)
-#         old_data.append(data)
-#         file.seek(0)
-#         json.dump(old_data, file, indent=4)
-
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
-    dict = {}
-    flag = False
-    if request.method == "POST":
-        data = request.form.to_dict()
-        filepath = "data.json"
-        # append_to_json(filepath, data)
-        flag = True
-    return render_template("index.html", flag=flag)
+    return render_template("index.html")
 
-# if __name__ == "__main__":
-#     app.run(debug=True)
+
+@app.route("/greetings", methods=["POST"])
+def greetings():
+    table_name = "adet_user"
+    schema = """
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        f_name VARCHAR(255),
+        m_name VARCHAR(255),
+        l_name VARCHAR(255),
+        contact VARCHAR(255),
+        email VARCHAR(255),
+        address VARCHAR(255)
+    """
+    database.create_table(table_name, schema)
+    f_name = request.form.get("f_name")
+    m_name = request.form.get("m_name")
+    l_name = request.form.get("l_name")
+    contact = request.form.get("contact_no")
+    email = request.form.get("email")
+    address = request.form.get("address")
+    columns = ["f_name", "m_name", "l_name", "contact", "email", "address"]
+    values = (f_name, m_name, l_name, contact, email, address)
+    database.insert_data(table_name, columns, values)
+    return render_template("greetings.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
