@@ -25,7 +25,7 @@ def greetings():
         f_name VARCHAR(255),
         m_name VARCHAR(255),
         l_name VARCHAR(255),
-        contact VARCHAR(255),
+        contact VARCHAR(20),
         email VARCHAR(255),
         address VARCHAR(255)
     """
