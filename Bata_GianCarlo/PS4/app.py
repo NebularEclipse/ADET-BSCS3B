@@ -1,99 +1,114 @@
 import hashlib
-import secrets
+from flask import Flask, render_template, request, redirect, session, flash
 from database import DBManager
-from flask import Flask, flash, redirect, render_template, request, url_for
-from flask_bootstrap import Bootstrap
-
-secret_key = secrets.token_hex(16)
 
 app = Flask(__name__)
-app.secret_key = secret_key
-Bootstrap(app)
+app.secret_key = (
+    "my super duper secret key that only I know of... except if you read it here"
+)
 
-database = DBManager("localhost", "root", None, "adet")
+db_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': None,
+    'database': 'adet',
+}
+
+db_manager = DBManager(db_config)
+
+db_manager.create_database()
+db_manager.create_users_table()
 
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    return render_template("index.html")
+def sha256_hash(password):
+    password_bytes = password.encode("utf-8")
+    sha256 = hashlib.sha256()
+    sha256.update(password_bytes)
+    return sha256.hexdigest()
+
+def check_password(stored_hash, provided_password):
+    hashed_provided_password = sha256_hash(provided_password)
+    return stored_hash == hashed_provided_password
 
 
-@app.route("/sign_in", methods=["POST"])
-def sign_in():
-    pass
+@app.route("/")
+def home():
+    if "user_id" in session:
+        return redirect("/dashboard")
+    return redirect("/login")
 
 
-@app.route("/sign_up", methods=["GET", "POST"])
-def sign_up():
-    table_name = "adet_user"
-    schema = """
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(255) UNIQUE,
-        first_name VARCHAR(255),
-        middle_name VARCHAR(255),
-        last_name VARCHAR(255),
-        contact_number VARCHAR(50),
-        email VARCHAR(255) UNIQUE,
-        address VARCHAR(255),
-        password VARCHAR(255)
-    """
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' in session:
+        username = session['username']
+        return render_template('dashboard.html', username=username)
+    
+    return redirect("/login")
 
-    database.create_table(table_name, schema)
 
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
     if request.method == "POST":
-        username = request.form.get("username")
+        username = request.form["username"]
         first_name = request.form.get("first_name")
         middle_name = request.form.get("middle_name")
         last_name = request.form.get("last_name")
         contact_number = request.form.get("contact_number")
-        email = request.form.get("email")
+        email = request.form["email"]
         address = request.form.get("address")
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
+        password = request.form["password"]
+        confirm_password = request.form["confirm_password"]
 
         if password != confirm_password:
-            flash("Passwords do not match!", "error")
-            return redirect(url_for("sign_up"))
+            flash('Passwords do not match. Please try again.', 'error')
+            return redirect("/signup")
 
-        database.cursor.execute(
-            f"SELECT * FROM {table_name} WHERE username = %s OR email = %s",
-            (username, email),
+        hashed_password = sha256_hash(password)
+
+        existing_user = db_manager.get_user_by_username(username)
+        if existing_user:
+            flash("Username already taken!", "error")
+            return redirect("/signup")
+
+        db_manager.create_user(
+            username,
+            first_name,
+            middle_name,
+            last_name,
+            contact_number,
+            email,
+            address,
+            hashed_password,
         )
-        existing_user_or_email = database.cursor.fetchone()
+        flash("Signup successful! You can now log in.", "success")
+        return redirect("/login")
 
-        if existing_user_or_email:
-            flash(
-                "Username or email is already taken. Please choose a different one.",
-                "error",
-            )
+    return render_template("signup.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        user = db_manager.get_user_by_username(username)
+        if user and check_password(user["password"], password):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            return redirect("/")
         else:
-            hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-            columns = [
-                "username",
-                "first_name",
-                "middle_name",
-                "last_name",
-                "contact_number",
-                "email",
-                "address",
-                "password",
-            ]
-            values = (
-                username,
-                first_name,
-                middle_name,
-                last_name,
-                contact_number,
-                email,
-                address,
-                hashed_password,
-            )
-            database.insert_data(table_name, columns, values)
-            flash("Account created successfully!", "success")
+            flash("Invalid username or password", "error")
 
-        return redirect(url_for("index"))
+    return render_template("login.html")
 
-    return render_template("sign_up.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect("/login")
 
 
 if __name__ == "__main__":
