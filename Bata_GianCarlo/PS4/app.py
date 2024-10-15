@@ -42,7 +42,9 @@ def home():
 def dashboard():
     if 'user_id' in session:
         username = session['username']
-        return render_template('dashboard.html', username=username)
+        user = db_manager.get_user_by_username(username)
+        print(user)
+        return render_template('dashboard.html', user=user)
     
     return redirect("/login")
 

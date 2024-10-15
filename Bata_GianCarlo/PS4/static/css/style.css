@@ -23,12 +23,19 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   color: #ffff9a;
   padding: 30px 40px;
-  width: 420px;
+  width: fit-content;
+}
+
+.wrapper .table, th, td {
+  color: white;
+  border: 1px solid;
+  padding: 10px;
 }
 
 .wrapper h1 {
   font-size: 36px;
   text-align: center;
+  margin: 10px;
 }
 
 .wrapper .input-box {
