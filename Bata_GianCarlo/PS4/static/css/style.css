@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  align-items: center;
+  background: url("../images/background.jpg") no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.wrapper {
+  backdrop-filter: blur(25px);
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: #ffff9a;
+  padding: 30px 40px;
+  width: 420px;
+}
+
+.wrapper h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+.wrapper .input-box {
+  height: 50px;
+  margin: 30px 0;
+  position: relative;
+  width: 100%;
+}
+
+.input-box input {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  color: #ffff9a;
+  font-size: 16px;
+  height: 100%;
+  padding: 20px 20px 20px 20px;
+  width: 100%;
+}
+
+.input-box input::placeholder {
+  color: #ffff9a;
+}
+
+.wrapper .btn {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #ffff9a;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  height: 45px;
+  margin-bottom: 15px;
+  margin-top: 30px;
+  outline: none;
+  width: 100%;
+}
+
+.greetings {
+  backdrop-filter: blur(20px);
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  padding: 30px 40px;
+  width: auto;
+}
+
+.greetings h1 {
+  color: #ffff9a;
+  font-size: 36px;
+  text-align: center;
+}
+
+.greetings .go-back-link {
+  align-items: center;
+  font-size: 14.5px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.greetings a {
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.greetings a:hover {
+  text-decoration: underline;
+}
